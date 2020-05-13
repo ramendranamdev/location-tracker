@@ -1,16 +1,12 @@
-import * as React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from './screens/HomeScreen';
-import LocationAPI from './screens/LocationAPI';
-import BackgroundLocationAPI from './screens/BackgroundLocationAPI';
-
-
-
-
-
+import * as React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import HomeScreen from "./screens/HomeScreen";
+import LocationAPI from "./screens/LocationAPI";
+import BackgroundLocationAPI from "./screens/BackgroundLocationAPI";
+import DefaultMarkers from "./screens/Map/DefaultMarkers";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -72,50 +68,44 @@ const Stack = createStackNavigator();
 function HomeTabs() {
   return (
     <Tab.Navigator
-        screenOptions={({ route }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+          let iconName;
 
-            if (route.name === 'Home') {
+          if (route.name === "Home") {
             iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-            } else if (route.name === 'Settings') {
-            iconName = focused ? 'ios-list-box' : 'ios-list';
-            }else if(route.name === 'Track'){
-              iconName = focused ? 'ios-list-box' : 'ios-list';
-            }else if(route.name === 'Stats'){
-              iconName = focused ? 'ios-list-box' : 'ios-list';
-            }
+              ? "ios-information-circle"
+              : "ios-information-circle-outline";
+          } else if (route.name === "Settings") {
+            iconName = focused ? "ios-list-box" : "ios-list";
+          } else if (route.name === "Track") {
+            iconName = focused ? "ios-list-box" : "ios-list";
+          } else if (route.name === "Stats") {
+            iconName = focused ? "ios-list-box" : "ios-list";
+          }
 
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
-        })}
-        tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-        }}
-        
+      })}
+      tabBarOptions={{
+        activeTintColor: "tomato",
+        inactiveTintColor: "gray",
+      }}
     >
-  
-        <Tab.Screen headerMode="none" name="Home" component={HomeScreen} />
-        <Tab.Screen name="Track" component={HomeScreen} />
-        <Tab.Screen name="Location" component={LocationAPI} />
-        <Tab.Screen name="BG Location" component={BackgroundLocationAPI} />
+      <Tab.Screen headerMode="none" name="Home" component={HomeScreen} />
+      <Tab.Screen name="Track" component={HomeScreen} />
+      <Tab.Screen name="Location" component={LocationAPI} />
+      <Tab.Screen name="Map" component={DefaultMarkers} />
+      {/* <Tab.Screen name="BG Location" component={BackgroundLocationAPI} /> */}
     </Tab.Navigator>
   );
 }
 
-
-
-
 export default function Routes() {
   return (
-
-    <Stack.Navigator headerMode="none" >
+    <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={HomeTabs} />
     </Stack.Navigator>
-
   );
 }

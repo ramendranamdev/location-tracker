@@ -1,22 +1,27 @@
-import React, { memo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Background from '../components/Background';
-import Logo from '../components/Logo';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import TextInput from '../components/TextInput';
-import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
+import React, { memo, useState, useContext } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { AuthContext } from "../Context/AuthContext";
+import Background from "../components/Background";
+import Logo from "../components/Logo";
+import Header from "../components/Header";
+import Button from "../components/Button";
+import TextInput from "../components/TextInput";
+import BackButton from "../components/BackButton";
+import { theme } from "../core/theme";
 import {
   emailValidator,
   passwordValidator,
   nameValidator,
-} from '../core/utils';
+} from "../core/utils";
+import { registerUser } from "../core/Api";
 
 const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState({ value: '', error: '' });
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
+  const [name, setName] = useState({ value: "Test User", error: "" });
+  const [email, setEmail] = useState({ value: "test@email.com", error: "" });
+  const [password, setPassword] = useState({ value: "password", error: "" });
+  const [duplicate, setDuplicate] = useState(null);
+
+  let { signUp } = useContext(AuthContext);
 
   const _onSignUpPressed = () => {
     const nameError = nameValidator(name.value);
@@ -30,7 +35,9 @@ const RegisterScreen = ({ navigation }) => {
       return;
     }
 
-    navigation.navigate('Dashboard');
+    signUp({ name, email, password });
+
+    // navigation.navigate("Dashboard");
   };
 
   return (
@@ -40,12 +47,11 @@ const RegisterScreen = ({ navigation }) => {
       <Logo />
 
       <Header>Create Account</Header>
-
       <TextInput
         label="Name"
         returnKeyType="next"
         value={name.value}
-        onChangeText={text => setName({ value: text, error: '' })}
+        onChangeText={(text) => setName({ value: text, error: "" })}
         error={!!name.error}
         errorText={name.error}
       />
@@ -54,7 +60,7 @@ const RegisterScreen = ({ navigation }) => {
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -67,7 +73,7 @@ const RegisterScreen = ({ navigation }) => {
         label="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={text => setPassword({ value: text, error: '' })}
+        onChangeText={(text) => setPassword({ value: text, error: "" })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
@@ -79,7 +85,7 @@ const RegisterScreen = ({ navigation }) => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -95,11 +101,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 4,
   },
   link: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: theme.colors.primary,
   },
 });
