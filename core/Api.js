@@ -2,23 +2,50 @@ import axios from "axios";
 import { emailValidator, passwordValidator } from "./utils";
 import { api_base_url } from "./../config";
 
-const base_url = "http://192.168.43.166:3000";
+const base_url = api_base_url;
+const content_type = "Application/Json";
+const register_user_url = base_url + "/users";
 const login_url = base_url + "/login";
+const location_data_url = base_url + "/location";
 
-export const getData = function (token) {
-  return axios
-    .get(base_url, {
-      "content-type": "Application/Json",
-      "api-access-token": token,
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((err) => {
-      console.log(err);
-      throw err;
-    });
+export const welcomeRoute = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      axios
+        .get(base_url + "/location/dataa", { "x-api-token": "token" })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  });
 };
+
+export const getLocationData = (token) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(location_data_url + "/data", {
+        headers: { "x-api-token": token },
+      })
+      .then((result) => {
+        resolve(result.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(err);
+      });
+  });
+};
+
+// export const getLastUpdatedLocation = (token) => {
+//   return new Promise((resolve, reject) => {
+//     axios.get(location_data_url, { "x-api-token": token });
+//   });
+// };
 
 export const registerUser = (name, email, password) =>
   //Sanitize Data here first
@@ -30,7 +57,7 @@ export const registerUser = (name, email, password) =>
         password,
       };
       axios
-        .post("http://192.168.43.166:3000/users", user, {
+        .post(register_user_url, user, {
           "content-type": "Application/Json",
         })
         .then((result) => {

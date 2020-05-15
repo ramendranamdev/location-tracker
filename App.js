@@ -65,14 +65,23 @@ export default function App({ navigation }) {
       let userToken;
 
       try {
-        userToken = await AsyncStorage.getItem("userToken");
+        userToken = await AsyncStorage.getItem(
+          "userToken",
+          (err, userToken) => {
+            if (userToken != "") {
+              dispatch({ type: "RESTORE_TOKEN", token: userToken });
+            } else {
+              dispatch({ type: "RESTORE_TOKEN", token: "" });
+            }
+          }
+        );
 
         //$$$$$$$
-        if (userToken != "") {
-          dispatch({ type: "RESTORE_TOKEN", token: userToken });
-        } else {
-          dispatch({ type: "RESTORE_TOKEN", token: "" });
-        }
+        // if (userToken != "") {
+        //   dispatch({ type: "RESTORE_TOKEN", token: userToken });
+        // } else {
+        //   dispatch({ type: "RESTORE_TOKEN", token: "" });
+        // }
       } catch (e) {
         // Restoring token failed
       }
@@ -103,8 +112,11 @@ export default function App({ navigation }) {
 
             if (data.CODE == "200") {
               const TOKEN = data.user.token;
-              AsyncStorage.setItem("userToken", TOKEN);
-              dispatch({ type: "SIGN_IN", token: TOKEN });
+              AsyncStorage.setItem("userToken", TOKEN, (err) => {
+                if (err) throw err;
+                dispatch({ type: "SIGN_IN", token: TOKEN });
+              });
+              // dispatch({ type: "SIGN_IN", token: TOKEN });
             } else {
               ToastAndroid.show("Try again", ToastAndroid.SHORT);
             }
@@ -116,8 +128,11 @@ export default function App({ navigation }) {
         // dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
       },
       signOut: async () => {
-        AsyncStorage.removeItem("userToken");
-        dispatch({ type: "SIGN_OUT" });
+        AsyncStorage.removeItem("userToken", function (err) {
+          if (err) throw err;
+          dispatch({ type: "SIGN_OUT" });
+        });
+        // dispatch({ type: "SIGN_OUT" });
       },
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token

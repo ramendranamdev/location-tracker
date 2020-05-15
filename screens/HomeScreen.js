@@ -9,6 +9,7 @@ import {
   AsyncStorage,
 } from "react-native";
 import { AuthContext } from "../Context/AuthContext";
+import { getLocationData } from "../core/Api";
 
 const instructions = Platform.select({
   ios: `Press Cmd+R to reload,\nCmd+D or shake for dev menu`,
@@ -24,10 +25,8 @@ function HomeScreen({ navigation }) {
     retrieveItem("userToken")
       .then((data) => {
         //this callback is executed when your Promise is resolved
-        // console.log(data);
         usertoken = data;
         setToken(data);
-        console.log(usertoken);
       })
       .catch((error) => {
         //this callback is executed when your Promise is rejected
@@ -47,7 +46,7 @@ function HomeScreen({ navigation }) {
     return;
   }
 
-  if (token !== "") {
+  if (token == "") {
     return (
       <View>
         <Text>Loading...</Text>
@@ -56,7 +55,7 @@ function HomeScreen({ navigation }) {
   } else
     return (
       <View style={styles.container}>
-        {console.log(signOut)}
+        {/* {console.log(signOut)} */}
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>This is your Home Screen</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
